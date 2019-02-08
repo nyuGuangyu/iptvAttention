@@ -1,0 +1,12 @@
+{
+  "data_dir": "/home/lgy/IPTV_new/iptv_attention/data/",
+  "data_train": "/home/lgy/IPTV_new/iptv_attention/data/preprocessed_data_train.cp",
+  "data_test": "/home/lgy/IPTV_new/iptv_attention/data/preprocessed_data_test.cp",
+  "summary_dir": "/home/lgy/iptv_attention/experiments/attn_train/summary",
+  "checkpoint_dir": "/home/lgy/iptv_attention/experiments/attn_train/checkpoint",
+  "num_epochs": 10000,
+  "learning_rate": 1e-4,
+  "batch_size": 8,
+  "max_to_keep": 3,
+  "exp_name": "double_attn_sw_title_train"
+}
