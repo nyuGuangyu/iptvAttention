@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="392fbf09-d5d7-4af6-94c4-c353077e89c0" name="nyu.prince" url="http://prince.hpc.nyu.edu">
+        <fileTransfer host="prince.hpc.nyu.edu" port="22" rootFolder="/home/gl1257" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

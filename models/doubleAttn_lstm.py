@@ -2,9 +2,6 @@ from base.base_model import BaseModel
 import tensorflow as tf
 import numpy as np
 
-ENTROPY_WEIGHT = 0.
-ENTROPY_EPS = 1e-6
-
 
 class Attn_Fuse_Model(BaseModel):
     def __init__(self, data_loader, config):
@@ -54,110 +51,33 @@ class Attn_Fuse_Model(BaseModel):
             self.x_nsw = tf.to_float(self.x_nsw)
             self.x_seq = tf.to_float(self.x_seq)
             with tf.variable_scope('attn_base'):
-                fc1_a = tf.contrib.layers.fully_connected(self.x_hour,
-                                                          32,
-                                                          activation_fn=tf.nn.tanh,
-                                                          normalizer_fn=None,
-                                                          normalizer_params=None,
-                                                          weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          weights_regularizer=None,
-                                                          biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          biases_regularizer=None,
-                                                          trainable=True,
-                                                          scope="fc1_a")
-                fc1_b = tf.contrib.layers.fully_connected(self.x_nsw,
-                                                          32,
-                                                          activation_fn=tf.nn.tanh,
-                                                          normalizer_fn=None,
-                                                          normalizer_params=None,
-                                                          weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          weights_regularizer=None,
-                                                          biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          biases_regularizer=None,
-                                                          trainable=True,
-                                                          scope="fc1_b")
+                fc1_a = tf.contrib.layers.fully_connected(self.x_hour, 32, activation_fn=tf.nn.tanh, scope="fc1_a")
+                fc1_b = tf.contrib.layers.fully_connected(self.x_nsw, 32, activation_fn=tf.nn.tanh, scope="fc1_b")
 
                 fc1_a = tf.contrib.layers.batch_norm(fc1_a)
                 fc1_b = tf.contrib.layers.batch_norm(fc1_b)
 
-                fc2_a = tf.contrib.layers.fully_connected(fc1_a,
-                                                          32,
-                                                          activation_fn=tf.nn.tanh,
-                                                          normalizer_fn=None,
-                                                          normalizer_params=None,
-                                                          weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          weights_regularizer=None,
-                                                          biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          biases_regularizer=None,
-                                                          trainable=True,
-                                                          scope="fc2_a")
-                fc2_b = tf.contrib.layers.fully_connected(fc1_b,
-                                                          32,
-                                                          activation_fn=tf.nn.tanh,
-                                                          normalizer_fn=None,
-                                                          normalizer_params=None,
-                                                          weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          weights_regularizer=None,
-                                                          biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          biases_regularizer=None,
-                                                          trainable=True,
-                                                          scope="fc2_b")
+                fc2_a = tf.contrib.layers.fully_connected(fc1_a, 32, activation_fn=tf.nn.tanh, scope="fc2_a")
+                fc2_b = tf.contrib.layers.fully_connected(fc1_b, 32, activation_fn=tf.nn.tanh, scope="fc2_b")
 
                 fc2_a = tf.contrib.layers.batch_norm(fc2_a)
                 fc2_b = tf.contrib.layers.batch_norm(fc2_b)
 
-                fc3_a = tf.contrib.layers.fully_connected(fc2_a,
-                                                          32,
-                                                          activation_fn=tf.nn.tanh,
-                                                          normalizer_fn=None,
-                                                          normalizer_params=None,
-                                                          weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          weights_regularizer=None,
-                                                          biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          biases_regularizer=None,
-                                                          trainable=True,
-                                                          scope="fc3_a")
-                fc3_b = tf.contrib.layers.fully_connected(fc2_b,
-                                                          32,
-                                                          activation_fn=tf.nn.tanh,
-                                                          normalizer_fn=None,
-                                                          normalizer_params=None,
-                                                          weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          weights_regularizer=None,
-                                                          biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                          biases_regularizer=None,
-                                                          trainable=True,
-                                                          scope="fc3_b")
+                fc3_a = tf.contrib.layers.fully_connected(fc2_a, 32, activation_fn=tf.nn.tanh, scope="fc3_a")
+                fc3_b = tf.contrib.layers.fully_connected(fc2_b, 32, activation_fn=tf.nn.tanh, scope="fc3_b")
 
                 fc3_a = tf.contrib.layers.batch_norm(fc3_a)
                 fc3_b = tf.contrib.layers.batch_norm(fc3_b)
 
-                conv_kernel_a = tf.contrib.layers.fully_connected(fc3_a,
-                                                                  int(self.x_base.shape[1]),
-                                                                  activation_fn=tf.nn.tanh,
-                                                                  normalizer_fn=None,
-                                                                  normalizer_params=None,
-                                                                  weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                                  weights_regularizer=None,
-                                                                  biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                                  biases_regularizer=None,
-                                                                  trainable=True,
-                                                                  scope="conv_kernel_a")
-                conv_kernel_b = tf.contrib.layers.fully_connected(fc3_b,
-                                                                  int(self.x_base.shape[1]),
-                                                                  activation_fn=tf.nn.tanh,
-                                                                  normalizer_fn=None,
-                                                                  normalizer_params=None,
-                                                                  weights_initializer=tf.contrib.layers.xavier_initializer(),
-                                                                  weights_regularizer=None,
-                                                                  biases_initializer=tf.contrib.layers.xavier_initializer(),
-                                                                  biases_regularizer=None,
-                                                                  trainable=True,
-                                                                  scope="conv_kernel_b")
+                conv_kernel_a = tf.contrib.layers.fully_connected(fc3_a, int(self.x_base.shape[1]), activation_fn=tf.nn.tanh, scope="conv_kernel_a")
+                conv_kernel_b = tf.contrib.layers.fully_connected(fc3_b, int(self.x_base.shape[1]), activation_fn=tf.nn.tanh, scope="conv_kernel_b")
 
                 conv_kernel = tf.add_n([conv_kernel_a, conv_kernel_b])
 
             with tf.variable_scope('attn_channel'):
+                """
+                TO DO...
+                """
 
 
             with tf.variable_scope('attn_fuse'):
@@ -179,10 +99,6 @@ class Attn_Fuse_Model(BaseModel):
             y_ind = tf.argmax(self.y, axis=1)  # --> [?,]
             self.loss = tf.losses.softmax_cross_entropy(onehot_labels=tf.stop_gradient(self.y), logits=self.out,
                                                         scope="loss")
-            self.entropy = ENTROPY_WEIGHT * -1. * tf.reduce_mean(
-                tf.reduce_sum(tf.multiply(tf.nn.sigmoid(self.out), tf.log(tf.nn.sigmoid(self.out) + ENTROPY_EPS)),
-                              axis=1))
-            self.loss_entropy = self.loss + self.entropy
             self.acc = tf.reduce_mean(tf.cast(tf.equal(y_ind, self.out_argmax), tf.float32), name="acc")
             self.acc2 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 2), tf.float32), name="acc2")
             self.acc3 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 3), tf.float32), name="acc3")
@@ -193,10 +109,7 @@ class Attn_Fuse_Model(BaseModel):
             self.acc8 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 8), tf.float32), name="acc8")
             self.acc9 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 9), tf.float32), name="acc9")
             self.acc10 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 10), tf.float32), name="acc10")
-            self.acc20 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 20), tf.float32), name="acc20")
-            self.acc30 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 30), tf.float32), name="acc30")
-            self.acc40 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 40), tf.float32), name="acc40")
-            self.acc50 = tf.reduce_mean(tf.cast(tf.nn.in_top_k(self.out, y_ind, 50), tf.float32), name="acc50")
+
 
         with tf.variable_scope('train_step'):
             self.optimizer = tf.train.AdamOptimizer(self.config.learning_rate)
@@ -217,10 +130,6 @@ class Attn_Fuse_Model(BaseModel):
         tf.add_to_collection('train', self.acc8)
         tf.add_to_collection('train', self.acc9)
         tf.add_to_collection('train', self.acc10)
-        tf.add_to_collection('train', self.acc20)
-        tf.add_to_collection('train', self.acc30)
-        tf.add_to_collection('train', self.acc40)
-        tf.add_to_collection('train', self.acc50)
 
         print("total num of weights: ", np.sum([np.prod(v.get_shape().as_list()) for v in tf.trainable_variables()]))
 

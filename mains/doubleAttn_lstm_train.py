@@ -1,7 +1,7 @@
 import tensorflow as tf
 import sys
 
-dir = "/home/lgy/IPTV_new/iptv_attention/"
+dir = "/home/gl1257/iptv_attention/"
 if dir not in sys.path:
     sys.path.append(dir)
 from data_loader.datagen_lstm import DataGenerator

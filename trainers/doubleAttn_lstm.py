@@ -35,8 +35,7 @@ class AttnTrainer(BaseTrain):
         self.x_base, self.x_hour, self.x_nsw, self.x_seq, self.y, self.is_training = tf.get_collection('inputs')
         self.train_op, self.loss_node, self.entropy, self.loss_entropy, self.acc_node, self.acc2_node, self.acc3_node \
             , self.acc4_node, self.acc5_node, self.acc6_node, self.acc7_node, self.acc8_node \
-            , self.acc9_node, self.acc10_node, self.acc20_node, self.acc30_node, self.acc40_node\
-            , self.acc50_node= tf.get_collection('train')
+            , self.acc9_node, self.acc10_node = tf.get_collection('train')
         self.out = tf.get_collection('out')
 
     def train(self):
@@ -70,10 +69,7 @@ class AttnTrainer(BaseTrain):
         # Iterate over batches
         for cur_it in tt:
             # One Train step on the current batch
-            loss, entropy, loss_entropy, acc = self.train_step()
-            # print(loss)
-            # print(entropy)
-            # print(loss_entropy)
+            loss, acc = self.train_step()
             # update metrics returned from train_step func
             loss_per_epoch.update(loss)
             acc_per_epoch.update(acc)
@@ -123,19 +119,15 @@ Epoch-{0}  loss:{1:.8f} -- acc:{2:.4f} -- lr:{3:.8f} -- exp_name:{4} --entropy:{
         acc8_per_epoch = AverageMeter()
         acc9_per_epoch = AverageMeter()
         acc10_per_epoch = AverageMeter()
-        acc20_per_epoch = AverageMeter()
-        acc30_per_epoch = AverageMeter()
-        acc40_per_epoch = AverageMeter()
-        acc50_per_epoch = AverageMeter()
 
         # Iterate over batches
         for cur_it in tt:
             # One Train step on the current batch
-            loss, acc, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10, acc20, acc30, acc40, acc50 \
+            loss, acc, acc2, acc3, acc4, acc5, acc6, acc7, acc8, acc9, acc10 \
                 = self.sess.run([self.loss_node, self.acc_node,
                                  self.acc2_node, self.acc3_node, self.acc4_node, self.acc5_node,
                                  self.acc6_node, self.acc7_node, self.acc8_node, self.acc9_node,
-                                 self.acc10_node, self.acc20_node, self.acc30_node, self.acc40_node, self.acc50_node],
+                                 self.acc10_node],
                                 feed_dict={self.is_training: False})
             # update metrics returned from train_step func
             loss_per_epoch.update(loss)
@@ -149,10 +141,6 @@ Epoch-{0}  loss:{1:.8f} -- acc:{2:.4f} -- lr:{3:.8f} -- exp_name:{4} --entropy:{
             acc8_per_epoch.update(acc8)
             acc9_per_epoch.update(acc9)
             acc10_per_epoch.update(acc10)
-            acc20_per_epoch.update(acc20)
-            acc30_per_epoch.update(acc30)
-            acc40_per_epoch.update(acc40)
-            acc50_per_epoch.update(acc50)
 
         # summarize
         summaries_dict = {'test/loss_per_epoch': loss_per_epoch.val,
@@ -162,10 +150,9 @@ Epoch-{0}  loss:{1:.8f} -- acc:{2:.4f} -- lr:{3:.8f} -- exp_name:{4} --entropy:{
         print("""
 Val-{}  loss:{:.8f} -- acc:{:.4f} -- acc2:{:.4f} -- acc3:{:.4f} -- acc4:{:.4f} -- acc5:{:.4f} 
 -- acc6:{:.4f} -- acc7:{:.4f} -- acc8:{:.4f} -- acc9:{:.4f} -- acc10:{:.4f} 
--- acc20:{:.4f} -- acc30:{:.4f} -- acc40:{:.4f} -- acc50:{:.4f}
         """.format(epoch, loss_per_epoch.val, acc_per_epoch.val, acc2_per_epoch.val, acc3_per_epoch.val,
                    acc4_per_epoch.val, acc5_per_epoch.val
                    , acc6_per_epoch.val, acc7_per_epoch.val, acc8_per_epoch.val, acc9_per_epoch.val,
-                   acc10_per_epoch.val, acc20_per_epoch.val, acc30_per_epoch.val, acc40_per_epoch.val, acc50_per_epoch.val))
+                   acc10_per_epoch.val))
 
         tt.close()
