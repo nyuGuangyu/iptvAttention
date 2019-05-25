@@ -64,7 +64,6 @@ class AttnTrainer(BaseTrain):
 
         loss_per_epoch = AverageMeter()
         acc_per_epoch = AverageMeter()
-        entropy_per_epoch = AverageMeter()
 
         # Iterate over batches
         for cur_it in tt:
@@ -73,7 +72,6 @@ class AttnTrainer(BaseTrain):
             # update metrics returned from train_step func
             loss_per_epoch.update(loss)
             acc_per_epoch.update(acc)
-            entropy_per_epoch.update(entropy)
 
         self.sess.run(self.model.global_epoch_inc)
 
@@ -86,7 +84,7 @@ class AttnTrainer(BaseTrain):
 
         print("""
 Epoch-{0}  loss:{1:.8f} -- acc:{2:.4f} -- lr:{3:.8f} -- exp_name:{4} --entropy:{5:.8f}
-        """.format(epoch, loss_per_epoch.val, acc_per_epoch.val, self.config.learning_rate, self.config.exp_name, entropy_per_epoch.val))
+        """.format(epoch, loss_per_epoch.val, acc_per_epoch.val, self.config.learning_rate, self.config.exp_name))
 
         tt.close()
 
@@ -96,9 +94,9 @@ Epoch-{0}  loss:{1:.8f} -- acc:{2:.4f} -- lr:{3:.8f} -- exp_name:{4} --entropy:{
         also get the loss & acc of that minibatch.
         :return: (loss, acc) tuple of some metrics to be used in summaries
         """
-        _, loss, entropy, loss_entropy, acc = self.sess.run([self.train_op, self.loss_node, self.entropy, self.loss_entropy, self.acc_node],
+        _, loss, acc = self.sess.run([self.train_op, self.loss_node, self.acc_node],
                                      feed_dict={self.is_training: True})
-        return loss, entropy, loss_entropy, acc
+        return loss, acc
 
     def test(self, epoch):
         # initialize dataset

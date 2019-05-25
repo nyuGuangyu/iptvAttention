@@ -14,7 +14,6 @@ from tensorflow.python import debug as tf_debug
 import argparse
 
 
-
 def main(_):
     # capture the config path from the run arguments
     # then process the json configuration file

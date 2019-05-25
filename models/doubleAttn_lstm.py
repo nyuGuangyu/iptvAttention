@@ -80,6 +80,12 @@ class Attn_Fuse_Model(BaseModel):
                 """
 
 
+
+
+
+
+
+
             with tf.variable_scope('attn_fuse'):
                 conv_kernel = tf.reshape(conv_kernel, [tf.shape(conv_kernel)[0], 1, -1], name="conv_kernel_reshape")
                 prod = tf.matmul(conv_kernel, tf.stop_gradient(self.x_base),
