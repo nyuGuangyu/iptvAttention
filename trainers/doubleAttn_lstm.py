@@ -33,7 +33,7 @@ class AttnTrainer(BaseTrain):
         self.summarizer = logger
 
         self.x_base, self.x_hour, self.x_nsw, self.x_seq, self.y, self.is_training = tf.get_collection('inputs')
-        self.train_op, self.loss_node, self.entropy, self.loss_entropy, self.acc_node, self.acc2_node, self.acc3_node \
+        self.train_op, self.loss_node, self.acc_node, self.acc2_node, self.acc3_node \
             , self.acc4_node, self.acc5_node, self.acc6_node, self.acc7_node, self.acc8_node \
             , self.acc9_node, self.acc10_node = tf.get_collection('train')
         self.out = tf.get_collection('out')
@@ -83,7 +83,7 @@ class AttnTrainer(BaseTrain):
         self.model.save(self.sess)
 
         print("""
-Epoch-{0}  loss:{1:.8f} -- acc:{2:.4f} -- lr:{3:.8f} -- exp_name:{4} --entropy:{5:.8f}
+Epoch-{0}  loss:{1:.4f} -- acc:{2:.4f} -- lr:{3:.4f} -- exp_name:{4}
         """.format(epoch, loss_per_epoch.val, acc_per_epoch.val, self.config.learning_rate, self.config.exp_name))
 
         tt.close()

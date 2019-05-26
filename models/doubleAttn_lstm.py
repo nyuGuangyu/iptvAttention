@@ -92,7 +92,6 @@ class Attn_Fuse_Model(BaseModel):
                                  name="prod_matmul")  # [?,1,6]*[?,6,172] --> [?,1,172]
                 self.out = tf.squeeze(prod, name="out_before_mask")  # [?,172]
                 self.out = tf.add(self.out, channel_mask_c, name="out_after_mask")  # [?,172]
-
                 tf.add_to_collection('out', self.out)
 
         """
