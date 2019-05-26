@@ -4,9 +4,9 @@ import sys
 dir = "/home/gl1257/iptv_attention/"
 if dir not in sys.path:
     sys.path.append(dir)
-from data_loader.datagen_lstm import DataGenerator
-from models.doubleAttn_lstm import Attn_Fuse_Model
-from trainers.doubleAttn_lstm import AttnTrainer
+from data_loader.datagen_fullinfo import DataGenerator
+from models.doubleAttn import Attn_Fuse_Model
+from trainers.doubleAttn_trainer import AttnTrainer
 from utils.config import process_config
 from utils.dirs import create_dirs
 from utils.logger import Logger
